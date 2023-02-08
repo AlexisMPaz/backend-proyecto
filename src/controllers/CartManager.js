@@ -13,21 +13,14 @@ export class CartManager {
         this.checkFile();
         const dataBase = await fs.readFile(this.path, 'utf-8');
         const aux = JSON.parse(dataBase);
-        //Genera un archivo txt si no existe y usa su contenido como nuevo ID
-        !existsSync("./src/id/cartID.txt") && writeFileSync("./src/id/cartID.txt", "1", "utf-8");
-        const txt = await fs.readFile("./src/id/cartID.txt", 'utf-8');
-        let newID = parseInt(txt);
 
         //Pushea el nuevo cart con el nuevo ID
-        const aux2 = { products: [] , id: newID}
-        console.log(aux2)
-        aux.push(aux2);
+        const newID = aux.length ? aux[aux.length - 1].id + 1 : 1;
+        const newCart = { products: [] , id: newID};
+        aux.push(newCart);
 
         //Actualiza el JSON de productos
         await fs.writeFile(this.path, JSON.stringify(aux));
-
-        //Actualiza el ID del txt para el proximo ID
-        await fs.writeFile("./src/id/cartID.txt", JSON.stringify(newID + 1))
     }
 
     async getCartByID(idCart) {
@@ -48,7 +41,7 @@ export class CartManager {
         const auxCart = JSON.parse(cartDB);
         const cart = auxCart.find(cart => cart.id === idCart);
         if (cart) {
-            const productsDB = await fs.readFile("./src/json/products.json", 'utf-8');
+            const productsDB = await fs.readFile("./src/models/products.json", 'utf-8');
             const auxProducts = JSON.parse(productsDB);
             const product = auxProducts.find(prod => prod.id === idProduct);
             if (product) {
@@ -58,7 +51,7 @@ export class CartManager {
                     await fs.writeFile(this.path, JSON.stringify(auxCart));
                     return `El producto ID: ${idProduct} ha sido añadido al carrito ID: ${idCart} `
                 } else {
-                    cart.products.push({product: idProduct, quantity: 1});
+                    cart.products.push({idProduct: idProduct, quantity: 1});
                     await fs.writeFile(this.path, JSON.stringify(auxCart));
                     return `El producto ID: ${idProduct} ha sido añadido al carrito ID: ${idCart} `
                 }

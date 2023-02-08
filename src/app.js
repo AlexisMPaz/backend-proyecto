@@ -31,7 +31,7 @@ app.use('/api/carts', routerCarts);
 //Upload Images
 app.post('/upload', upload.single('product'), (req,res) => {
     console.log(req.file);
-    res.send("imagen cargada");
+    res.send({response:"Imagen cargada"});
 })
 
 app.listen(PORT, () => {

@@ -10,10 +10,9 @@ export class ProductManager {
         !existsSync(this.path) && writeFileSync(this.path, "[]", "utf-8");
     };
 
-
     async addProduct(newProduct) {
         if (Object.values(newProduct).includes("") || Object.values(newProduct).includes(null) || Object.values(newProduct).includes(undefined)) {
-            return "Error: El producto tiene campos incompletos" ;
+            return "Error: El producto tiene campos incompletos";
 
         } else {
             this.checkFile();
@@ -22,19 +21,12 @@ export class ProductManager {
             const product = aux.find(prod => prod.code === newProduct.code);
 
             if (!product) {
-                //Genera un archivo txt si no existe y usa su contenido como nuevo ID
-                !existsSync("./src/id/productID.txt") && writeFileSync("./src/id/productID.txt", "1", "utf-8");
-                const txt = await fs.readFile("./src/id/productID.txt", 'utf-8');
-                let newID = parseInt(txt);
-
                 //Pushea el nuevo producto con el nuevo ID
+                const newID = aux.length ? aux[aux.length - 1].id + 1 : 1;
                 aux.push({ ...newProduct, id: newID});
 
                 //Actualiza el JSON de productos
                 await fs.writeFile(this.path, JSON.stringify(aux));
-
-                //Actualiza el ID del txt para el proximo ID
-                await fs.writeFile("./src/id/productID.txt", JSON.stringify(newID + 1))
 
                 return "Success: El producto ha sido creado"
             } else {
