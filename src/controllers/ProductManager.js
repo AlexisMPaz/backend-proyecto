@@ -11,83 +11,71 @@ export class ProductManager {
     };
 
     async addProduct(newProduct) {
-        if (Object.values(newProduct).includes("") || Object.values(newProduct).includes(null) || Object.values(newProduct).includes(undefined)) {
+
+        if (Object.values(newProduct).some(value => !value)) {
             return "Error: El producto tiene campos incompletos";
-
-        } else {
-            this.checkFile();
-            const dataBase = await fs.readFile(this.path, 'utf-8');
-            const aux = JSON.parse(dataBase);
-            const product = aux.find(prod => prod.code === newProduct.code);
-
-            if (!product) {
-                //Pushea el nuevo producto con el nuevo ID
-                const newID = aux.length ? aux[aux.length - 1].id + 1 : 1;
-                aux.push({ ...newProduct, id: newID});
-
-                //Actualiza el JSON de productos
-                await fs.writeFile(this.path, JSON.stringify(aux));
-
-                return "Success: El producto ha sido creado"
-            } else {
-                return "Error: El producto ya existe";
-            }
         }
+
+        this.checkFile();
+        const products = JSON.parse(await fs.readFile(this.path, 'utf-8'));
+        const existingProduct = products.find(prod => prod.code === newProduct.code);
+
+        if (existingProduct) {
+            return "Error: El producto ya existe";
+        }
+
+        const newID = products.length ? products[products.length - 1].id + 1 : 1;
+        products.push({ ...newProduct, id: newID });
+        await fs.writeFile(this.path, JSON.stringify(products));
+        return "Success: El producto ha sido creado";
     }
 
     async getProducts() {
         this.checkFile();
-        const dataBase = await fs.readFile(this.path, 'utf-8');
-        const aux = JSON.parse(dataBase);
-        return aux;
+        const products = JSON.parse(await fs.readFile(this.path, 'utf-8'));
+        return products;
     }
 
 
     async getProductByID(idProduct) {
         this.checkFile();
-        const dataBase = await fs.readFile(this.path, 'utf-8');
-        const aux = JSON.parse(dataBase);
-        const product = aux.find(prod => prod.id === idProduct);
-        if (product) {
-            return product;
-        } else {
-            return `Error: El Producto ID: ${idProduct} no existe`;
-        }
+        const products = JSON.parse(await fs.readFile(this.path, 'utf-8'));
+        const product = products.find(prod => prod.id === idProduct);
+        product ? product : `Error: El Producto ID: ${idProduct} no existe`
     }
 
     async updateProduct(newProduct, idProduct) {
-        if (Object.values(newProduct).includes("") || Object.values(newProduct).includes(null)) {
-            return "Error: El producto tiene campos incompletos";
-
-        } else {
-            this.checkFile()
-            const dataBase = await fs.readFile(this.path, 'utf-8');
-            const aux = JSON.parse(dataBase);
-            const product = aux.find(prod => prod.id === idProduct);
-            if(product) {
-                const indice = aux.findIndex(prod => prod.id === idProduct);
-                aux[indice] = {...newProduct, id:idProduct};
-                await fs.writeFile(this.path, JSON.stringify(aux));
-                return `Success: El Producto ID: ${idProduct} ha sido actualizado`
-            } else {
-                return `Error: El Producto ID: ${idProduct} no existe`;
-            }
+        if (Object.values(newProduct).some(value => !value)) {
+            return 'Error: El producto tiene campos incompletos';
         }
+
+        this.checkFile();
+        const products = JSON.parse(await fs.readFile(this.path, 'utf-8'));
+        const productIndex = products.findIndex(prod => prod.id === idProduct);
+
+        if (productIndex === -1) {
+            return `Error: El Producto ID: ${idProduct} no existe`;
+        }
+
+        products[productIndex] = { ...newProduct, id: idProduct };
+        await fs.writeFile(this.path, JSON.stringify(products));
+        return `Success: El Producto ID: ${idProduct} ha sido actualizado`;
     }
 
     async deleteProduct(idProduct) {
         this.checkFile();
-        const dataBase = await fs.readFile(this.path, 'utf-8');
-        const aux = JSON.parse(dataBase);
-        const product = aux.find(prod => prod.id === idProduct);
-        if(product) {
-            const newArray = aux.filter(prod => prod.id !== idProduct)
-            await fs.writeFile(this.path, JSON.stringify(newArray));
-            return `Success: El Producto ${idProduct} ha sido eliminado`
-        } else {
-            return `Error: El Producto ${idProduct} no existe`;
+        const products = JSON.parse(await fs.readFile(this.path, 'utf-8'));
+        const productIndex = products.findIndex(prod => prod.id === idProduct);
+
+        if (productIndex === -1) {
+            return `Error: El Producto ID: ${idProduct} no existe`
         }
+
+        products.splice(productIndex, 1);
+        await fs.writeFile(this.path, JSON.stringify(products));
+        return `Success: El producto con ID ${idProduct} ha sido eliminado`;
     }
+
 }
 
 export class Product {
