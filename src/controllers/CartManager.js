@@ -46,11 +46,13 @@ export class CartManager {
         const productInCart = cart.products.find(prod => prod.idProduct === idProduct);
         console.log(productInCart)
 
-        if (productInCart) {
+        if (!productInCart) {
+            cart.products.push({ idProduct, quantity: 1 });
+          } else if (productInCart.quantity < product.stock) {
             productInCart.quantity++;
-        } else {
-            cart.products.push({ idProduct: idProduct, quantity: 1 });
-        }
+          } else {
+            return 'No hay suficiente stock';
+          }
 
         await fs.writeFile(this.path, JSON.stringify(carts));
         return `El producto ID: ${idProduct} ha sido añadido al carrito ID: ${idCart} `
