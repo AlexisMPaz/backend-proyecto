@@ -48,11 +48,11 @@ export class CartManager {
 
         if (!productInCart) {
             cart.products.push({ idProduct, quantity: 1 });
-          } else if (productInCart.quantity < product.stock) {
+        } else if (productInCart.quantity < product.stock) {
             productInCart.quantity++;
-          } else {
+        } else {
             return 'No hay suficiente stock';
-          }
+        }
 
         await fs.writeFile(this.path, JSON.stringify(carts));
         return `El producto ID: ${idProduct} ha sido añadido al carrito ID: ${idCart} `

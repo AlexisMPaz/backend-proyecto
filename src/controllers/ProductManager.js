@@ -41,7 +41,7 @@ export class ProductManager {
         this.checkFile();
         const products = JSON.parse(await fs.readFile(this.path, 'utf-8'));
         const product = products.find(prod => prod.id === idProduct);
-        product ? product : `Error: El Producto ID: ${idProduct} no existe`
+        return product ? product : `Error: El Producto ID: ${idProduct} no existe`
     }
 
     async updateProduct(newProduct, idProduct) {
@@ -79,7 +79,7 @@ export class ProductManager {
 }
 
 export class Product {
-    constructor(title, description, code, price, status, stock, category, thumbnail) {
+    constructor(title, description, code, price, status, stock, category, thumbnails) {
         this.title = title
         this.description = description
         this.code = code
@@ -87,6 +87,6 @@ export class Product {
         this.status = status
         this.stock = stock
         this.category = category
-        this.thumbnail = thumbnail
+        this.thumbnails = thumbnails
     }
 }

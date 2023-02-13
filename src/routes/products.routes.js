@@ -27,9 +27,9 @@ routerProduct.get('/:idProduct', async (req, res) => {
     }
 });
 
-routerProduct.post('', async (req, res) => {
-    let { title, description, code, price, status, stock, category, thumbnail } = req.body;
-    const newProduct = new Product(title, description, code, price, status, stock, category, thumbnail);
+routerProduct.post('/', async (req, res) => {
+    let { title, description, code, price, status, stock, category, thumbnails } = req.body;
+    const newProduct = new Product(title, description, code, price, status, stock, category, thumbnails);
     console.log(newProduct);
     let response = await productManager.addProduct(newProduct);
     res.send({ response: response });
@@ -38,8 +38,8 @@ routerProduct.post('', async (req, res) => {
 routerProduct.put('/:idProduct', async (req, res) => {
     const idProduct = parseInt(req.params.idProduct);
     if (Number.isInteger(idProduct)) {
-        let { title, description, price, thumbnail, code, stock } = req.body;
-        const newProduct = new Product(title, description, price, thumbnail, code, stock);
+        let { title, description, code, price, status, stock, category, thumbnails } = req.body;
+        const newProduct = new Product(title, description, code, price, status, stock, category, thumbnails);
         let response = await productManager.updateProduct(newProduct, idProduct);
         res.send({ response: response });
     } else {
