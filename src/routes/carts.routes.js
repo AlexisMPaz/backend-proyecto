@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { CartManager } from '../controllers/CartManager.js';
-const routerCarts = Router();
+export const routerCarts = Router();
 const cartManager = new CartManager("./src/models/carts.json");
 
 // Carts
@@ -32,5 +32,3 @@ routerCarts.post('/:idCart/product/:idProduct', async (req, res) => {
         res.send({response:"Error: El ID no es valido"});
     }
 });
-
-export default routerCarts;

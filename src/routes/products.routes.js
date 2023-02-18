@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { ProductManager, Product } from "../controllers/ProductManager.js";
-const routerProduct = Router();
-const productManager = new ProductManager("./src/models/products.json");
+
+export const routerProduct = Router();
+export const productManager = new ProductManager("./src/models/products.json");
 
 //Products
 
@@ -28,8 +29,8 @@ routerProduct.get('/:idProduct', async (req, res) => {
 });
 
 routerProduct.post('/', async (req, res) => {
-    let { title, description, code, price, status, stock, category, thumbnails } = req.body;
-    const newProduct = new Product(title, description, code, price, status, stock, category, thumbnails);
+    let { title, description, code, price, stock, category, thumbnails, status } = req.body;
+    const newProduct = new Product(title, description, code, price, stock, category, thumbnails, status);
     console.log(newProduct);
     let response = await productManager.addProduct(newProduct);
     res.send({ response: response });
@@ -38,8 +39,8 @@ routerProduct.post('/', async (req, res) => {
 routerProduct.put('/:idProduct', async (req, res) => {
     const idProduct = parseInt(req.params.idProduct);
     if (Number.isInteger(idProduct)) {
-        let { title, description, code, price, status, stock, category, thumbnails } = req.body;
-        const newProduct = new Product(title, description, code, price, status, stock, category, thumbnails);
+        let { title, description, code, price, stock, category, thumbnails, status } = req.body;
+        const newProduct = new Product(title, description, code, price, stock, category, thumbnails, status);
         let response = await productManager.updateProduct(newProduct, idProduct);
         res.send({ response: response });
     } else {
@@ -57,6 +58,3 @@ routerProduct.delete('/:idProduct', async (req, res) => {
         res.send({response:"Error: El ID no es valido"});
     }
 });
-
-
-export default routerProduct;

@@ -1,0 +1,48 @@
+<div class="container mainContainer">
+    <div class="row">
+        <form class="col-12 col-md-6 section" id="formAddProduct">
+            <h2 class="title">Crear nuevo producto</h2>
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Título</label>
+                <input type="text" class="form-control" id="title" name="title">
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">Descripción</label>
+                <input type="text" class="form-control" id="description" name="description">
+            </div>
+
+            <div class="mb-3">
+                <label for="code" class="form-label">Código</label>
+                <input type="text" class="form-control" id="code" name="code">
+            </div>
+
+            <div class="mb-3">
+                <label for="price" class="form-label">Precio</label>
+                <input type="number" class="form-control" id="price" name="price">
+            </div>
+
+            <div class="mb-3">
+                <label for="stock" class="form-label">Stock</label>
+                <input type="number" class="form-control" id="stock" name="stock">
+            </div>
+
+            <div class="mb-3">
+                <label for="category" class="form-label">Categoría</label>
+                <input type="text" class="form-control" id="category" name="category">
+            </div>
+
+            <div class="mb-3">
+                <label for="thumbnails" class="form-label">Ruta de Imagen</label>
+                <input type="text" class="form-control" id="thumbnails" name="thumbnails">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear Producto</button>
+        </form>
+    </div>
+
+    <h2 class="title text-center section">Productos</h2>
+
+    <div class="row" id="productsContainer"></div>
+</div>
